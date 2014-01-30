@@ -170,6 +170,10 @@ def get_parser():
     parser.add_argument('sourcedir')
     parser.add_argument('outdir')
     parser.add_argument('filenames', nargs='*', help='See `sphinx-build -h`')
+    parser.add_argument('--watch', nargs='*',
+                        dest='also_watch_dirs', default=[],
+                        help='In addition to sourcedir and outdir, '
+                             'also watch these dirs.')
     return parser
 
 
@@ -179,6 +183,7 @@ def main():
 
     srcdir = os.path.realpath(args.sourcedir)
     outdir = os.path.realpath(args.outdir)
+    also_watch_dirs = [os.path.realpath(_dir) for _dir in args.also_watch_dirs]
 
     build_args = []
     for arg, meta in SPHINX_BUILD_OPTIONS:
@@ -205,6 +210,9 @@ def main():
         os.makedirs(outdir)
 
     server = Server(watcher=LivereloadWatchdogWatcher())
-    server.watch(srcdir, SphinxBuilder(outdir, build_args, ignored))
+    builder = SphinxBuilder(outdir, build_args, ignored)
+    server.watch(srcdir, builder)
     server.watch(outdir)
+    for _dir in also_watch_dirs:
+        server.watch(_dir, builder)
     server.serve(port=args.port, root=outdir)
