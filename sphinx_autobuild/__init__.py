@@ -151,7 +151,7 @@ def get_parser():
     parser.add_argument('sourcedir')
     parser.add_argument('outdir')
     parser.add_argument('filenames', nargs='*', help='See sphinx-build -h')
-    parser.add_argument('--also-watch', nargs='*',
+    parser.add_argument('--watch', nargs='*',
                         dest='also_watch_dirs', default=[],
                         help='In addition to sourcedir and outdir, '
                              'also watch these dirs.')
