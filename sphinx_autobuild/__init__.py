@@ -62,6 +62,9 @@ class LivereloadWatchdogWatcher(object):
         event_handler = _WatchdogHandler(self, action)
         self._observer.schedule(event_handler, path=path, recursive=True)
 
+    def start(self, poll_tasks):
+        pass
+
 
 class SphinxBuilder(object):
 
